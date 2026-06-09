@@ -1,0 +1,84 @@
+# --- Python Environment ---
+venv/
+.venv/
+env/
+bin/
+lib/
+develop-eggs/
+dist/
+downloads/
+eggs/
+.eggs/
+parts/
+sdist/
+var/
+wheels/
+share/python-wheels/
+*.egg-info/
+.installed.cfg
+*.egg
+MANIFEST
+
+# --- Bytecode & Cache ---
+**/__pycache__/
+*.pyc
+*.pyo
+*.pyd
+.pytest_cache/
+.coverage
+htmlcov/
+.nox/
+.tox/
+.cache/
+.mypy_cache/
+
+# --- SECRETS (EXTREMELY IMPORTANT) ---
+# Never commit your API keys for Gemini, Groq, Tavily, etc.
+.env
+*.env
+.env.local
+.env.*.local
+config.yaml
+secrets.json
+
+# --- Data & Databases ---
+# Ignore local vector store data (Qdrant/Chroma) and logs
+data/
+db/
+storage/
+*.sqlite
+*.log
+*.db
+# If you use a local Qdrant instance via Docker, it might create this:
+qdrant_storage/
+
+# --- Embeddings & Local Models ---
+# Large model files from HuggingFace (BGE-small, etc.)
+models/
+*.bin
+*.onnx
+*.pt
+*.pkl
+
+# --- OS & IDE Files ---
+.DS_Store
+Thumbs.db
+.vscode/
+.idea/
+*.swp
+*.swo
+.project
+.pydevproject
+.settings/
+
+# --- Docker ---
+.docker/
+# Only ignore docker-compose.override.yml if you use it for local secrets
+docker-compose.override.yml
+
+# --- Project Specific ---
+# Ignore the actual PDFs or Code files you use for testing
+# You should keep a 'samples/' folder with 1-2 non-sensitive files instead
+input_files/
+temp_chunks/
+output/

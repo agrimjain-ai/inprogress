@@ -1,0 +1,12 @@
+langgraph
+langchain-google-genai
+langchain-groq
+qdrant-client
+sentence-transformers  # For local BGE embeddings
+rank_bm25              # For the Doc Agent's hybrid search
+tavily-python          # For the Web Agent
+tree-sitter            # For the Code Agent AST parsing
+a2a-sdk                # For the Agent-to-Agent protocol
+fastapi
+uvicorn
+python-dotenv
