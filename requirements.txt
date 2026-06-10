@@ -1,12 +1,40 @@
-langgraph
-langchain-google-genai
-langchain-groq
-qdrant-client
-sentence-transformers  # For local BGE embeddings
-rank_bm25              # For the Doc Agent's hybrid search
-tavily-python          # For the Web Agent
-tree-sitter            # For the Code Agent AST parsing
-a2a-sdk                # For the Agent-to-Agent protocol
 fastapi
-uvicorn
+uvicorn[standard]
+
+# LLMs
+google-generativeai
+groq
+
+# LangChain
+langchain
+langchain-core
+langchain-community
+langchain-groq
+langchain-google-genai
+langgraph
+
+# Embeddings & Vector Store
+sentence-transformers
+faiss-cpu
+
+# Code Ingestion
+gitpython
+tree-sitter
+tree-sitter-python
+tree-sitter-javascript
+tree-sitter-typescript
+
+# Document Processing
+pymupdf
+pypdf
+python-multipart
+
+# Utilities
 python-dotenv
+tiktoken
+httpx
+aiofiles
+pydantic
+numpy
+pandas
+tqdm
