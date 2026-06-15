@@ -1,27 +1,25 @@
-import psycopg2
-from neo4j import GraphDatabase
-from qdrant_client import QdrantClient
-from qdrant_client.models import VectorParams, Distance
-from backend.core.config import get_settings
+import sys
+import os
 
-settings = get_settings()
+sys.path.append(os.path.join(os.path.dirname(__file__), '..'))
+
+from qdrant_client.models import VectorParams, Distance
+from backend.core.database import (
+    get_postgres_connection,
+    get_neo4j_driver,
+    get_qdrant_client
+)
 
 def init_postgres():
     print("Initializing PostgreSQL...")
-    conn = psycopg2.connect(
-        host=settings.postgres_host,
-        port=settings.postgres_port,
-        user=settings.postgres_user,
-        password=settings.postgres_password,
-        dbname=settings.postgres_db
-    )
+    conn = get_postgres_connection()
     cursor = conn.cursor()
 
     cursor.execute("""
         CREATE TABLE IF NOT EXISTS documents (
             id SERIAL PRIMARY KEY,
             filename TEXT NOT NULL,
-            doc_type TEXT,          -- 'act', 'judgment', 'circular', 'notification'
+            doc_type TEXT,
             uploaded_at TIMESTAMP DEFAULT NOW(),
             status TEXT DEFAULT 'pending'
         );
@@ -32,9 +30,9 @@ def init_postgres():
             id SERIAL PRIMARY KEY,
             document_id INTEGER REFERENCES documents(id),
             chunk_text TEXT NOT NULL,
-            section_ref TEXT,       -- e.g. 'Section 16(4)'
+            section_ref TEXT,
             page_number INTEGER,
-            qdrant_id TEXT          -- links to vector in Qdrant
+            qdrant_id TEXT
         );
     """)
 
@@ -50,16 +48,13 @@ def init_postgres():
     conn.commit()
     cursor.close()
     conn.close()
-    print("PostgreSQL initialized.")
+    print("PostgreSQL done.")
 
 def init_neo4j():
     print("Initializing Neo4j...")
-    driver = GraphDatabase.driver(
-        settings.neo4j_uri,
-        auth=(settings.neo4j_user, settings.neo4j_password)
-    )
+    driver = get_neo4j_driver()
+
     with driver.session() as session:
-        # Unique constraints — prevents duplicate nodes
         session.run("CREATE CONSTRAINT IF NOT EXISTS FOR (n:Section) REQUIRE n.id IS UNIQUE")
         session.run("CREATE CONSTRAINT IF NOT EXISTS FOR (n:Judgment) REQUIRE n.id IS UNIQUE")
         session.run("CREATE CONSTRAINT IF NOT EXISTS FOR (n:Circular) REQUIRE n.id IS UNIQUE")
@@ -67,24 +62,21 @@ def init_neo4j():
         session.run("CREATE CONSTRAINT IF NOT EXISTS FOR (n:Amendment) REQUIRE n.id IS UNIQUE")
 
     driver.close()
-    print("Neo4j initialized.")
+    print("Neo4j done.")
 
 def init_qdrant():
     print("Initializing Qdrant...")
-    client = QdrantClient(
-        host=settings.qdrant_host,
-        port=settings.qdrant_port
-    )
-    
-    # 768 = vector size from sentence-transformers (all-mpnet-base-v2)
-    client.recreate_collection(
-        collection_name="legal_chunks",
-        vectors_config=VectorParams(size=768, distance=Distance.COSINE)
-    )
-    print("Qdrant initialized.")
+    client = get_qdrant_client()
+
+    if not client.collection_exists("legal_chunks"):
+        client.create_collection(
+            collection_name="legal_chunks",
+            vectors_config=VectorParams(size=768, distance=Distance.COSINE)
+        )
+    print("Qdrant done.")
 
 if __name__ == "__main__":
     init_postgres()
     init_neo4j()
     init_qdrant()
-    print("All databases initialized successfully.")
+    print("\nAll databases initialized successfully.")

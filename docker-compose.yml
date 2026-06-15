@@ -2,6 +2,7 @@ services:
   neo4j:
     image: neo4j:latest
     container_name: neo4j_db
+    hostname: neo4j
     ports:
       - "7474:7474"
       - "7687:7687"
@@ -9,18 +10,24 @@ services:
       - NEO4J_AUTH=neo4j/password123
     volumes:
       - neo4j_data:/data
+    networks:
+      - gstcopilot_net
 
   qdrant:
     image: qdrant/qdrant:latest
     container_name: qdrant_db
+    hostname: qdrant
     ports:
       - "6333:6333"
     volumes:
       - qdrant_data:/qdrant/storage
+    networks:
+      - gstcopilot_net
 
   postgres:
     image: postgres:latest
     container_name: postgres_db
+    hostname: postgres
     environment:
       - POSTGRES_USER=user
       - POSTGRES_PASSWORD=password
@@ -28,13 +35,16 @@ services:
     ports:
       - "5432:5432"
     volumes:
-      - postgres_data:/var/lib/postgresql/data
+      - postgres_data:/var/lib/postgresql
+    networks:
+      - gstcopilot_net
 
   backend:
     build:
       context: .
       dockerfile: backend/Dockerfile
     container_name: backend_app
+    hostname: backend
     ports:
       - "8000:8000"
     env_file:
@@ -45,6 +55,8 @@ services:
       - neo4j
       - qdrant
       - postgres
+    networks:
+      - gstcopilot_net
 
   frontend:
     image: nginx:alpine
@@ -53,6 +65,12 @@ services:
       - "8080:80"
     depends_on:
       - backend
+    networks:
+      - gstcopilot_net
+
+networks:
+  gstcopilot_net:
+    driver: bridge
 
 volumes:
   neo4j_data:
