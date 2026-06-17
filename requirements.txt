@@ -36,4 +36,4 @@ httpx
 aiofiles
 numpy
 pandas
-tiktoken
+pysbd

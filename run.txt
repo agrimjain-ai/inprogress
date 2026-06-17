@@ -1,0 +1,2 @@
+docker exec -it backend_app python scripts/test_parser.py
+docker exec -it backend_app python scripts/test_chunker.py
