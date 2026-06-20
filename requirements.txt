@@ -1,4 +1,44 @@
 # API Framework
+# fastapi
+# uvicorn[standard]
+
+# Database Clients
+# psycopg2-binary
+# neo4j
+# qdrant-client
+
+# LLMs
+# groq
+# google-generativeai
+
+# LangChain / LangGraph
+# langchain
+# langchain-core
+# langchain-community
+# langchain-groq
+# langchain-google-genai
+# langgraph
+
+# Embeddings & Reranking
+# sentence-transformers
+# torch --index-url https://download.pytorch.org/whl/cpu
+
+# Document Processing
+# pymupdf
+# python-docx
+# python-multipart
+
+# Utilities
+# python-dotenv
+# pydantic
+# pydantic-settings
+# httpx
+# aiofiles
+# numpy
+# pandas
+# pysbd
+
+# API Framework
 fastapi
 uvicorn[standard]
 
@@ -7,21 +47,9 @@ psycopg2-binary
 neo4j
 qdrant-client
 
-# LLMs
-groq
-google-generativeai
-
-# LangChain / LangGraph
-langchain
-langchain-core
-langchain-community
-langchain-groq
-langchain-google-genai
-langgraph
-
-# Embeddings & Reranking
-sentence-transformers
-torch --index-url https://download.pytorch.org/whl/cpu
+# Embeddings (lightweight, no torch)
+sentence-transformers[onnx]
+onnxruntime
 
 # Document Processing
 pymupdf
@@ -37,3 +65,4 @@ aiofiles
 numpy
 pandas
 pysbd
+tiktoken
